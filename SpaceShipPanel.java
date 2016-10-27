@@ -2,7 +2,7 @@
  * SpaceShip --- A game that counts your clicks
  * @author 		 David Ye Luo, Kenta Medina
  * @version		 1.0
- * @since		 2016-10-26
+ * @since		 2016-10-27
  */
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ public class SpaceShipPanel extends JPanel
 		
 		addMouseListener(listener);
 		addMouseMotionListener(listener);
-		resetButton.addActionListener(listener);
+		resetButton.addActionListener(new ButtonListener());
 		
 		setBackground(Color.black);
 		setPreferredSize(new Dimension(300, 200));
@@ -46,7 +46,9 @@ public class SpaceShipPanel extends JPanel
 		
 		if(clickedLocation != null && isClicked)
 		{
-			switch((int)(Math.random() * 5))	// Color Generator
+			// Color changes depending what shotCounter is
+			switch((shotCounter)%5)	// Color Generator
+			//switch((shotCounter+(int)(java.lang.Math.random()*4+1))%5)	// Color Generator
 			{
 			case 0:
 				g.setColor(Color.green);
@@ -66,31 +68,31 @@ public class SpaceShipPanel extends JPanel
 			}
 			
 			g.drawLine(clickedLocation.x, clickedLocation.y,
-				(int)(Math.random() * 300),
-				(int)(Math.random() * 200));
+					     (int)(Math.random() * 300),
+					     (int)(Math.random() * 200));
 			isClicked = false;
 		}
 		if(mouseLocation != null)
 		{
 			g.setColor(Color.cyan); // Spaceship
-			g.fillOval(mouseLocation.x, mouseLocation.y, 100, 100);	// SpaceShip
+			g.fillOval(mouseLocation.x - 25, mouseLocation.y - 12, 50, 25);	// SpaceShip
 		}
 		g.setColor(Color.white);  // Counter
 		g.drawString("Shot counter: " + shotCounter, 0, 195);  // Counter
 		g.drawString("by David and Kenta", 194, 195);  // Credit
 	}
+	
 	/**
 	 * SpaceShipListener --- Programs to hold Listener
 	 * @author 				 David Ye Luo, Kenta Medina
 	 * @version				 1.0
-	 * @since				 2016-10-26
+	 * @since				 2016-10-27
 	 */
 	private class SpaceShipListener implements MouseListener,
-						   MouseMotionListener,
-						   ActionListener
+						   MouseMotionListener
 	{
 		//------------------------------------------------------
-		//	Listen to mouse clicks
+		//	Listen to mouse pressed and released
 		//------------------------------------------------------
 		public void mouseClicked(MouseEvent e) // MouseListener
 		{
@@ -99,25 +101,54 @@ public class SpaceShipPanel extends JPanel
 			shotCounter++;
 			repaint();
 		}
+		
+		//------------------------------------------------------
+		//	Detects when mouse is in the panel
+		//------------------------------------------------------
 		public void mouseEntered(MouseEvent arg0) {}  // MouseListener
+		
+		//------------------------------------------------------
+		//	Detects when mouse is out of panel
+		//------------------------------------------------------
 		public void mouseExited(MouseEvent arg0) {}   // MouseListener
+		
+		//------------------------------------------------------
+		//	Detects when a mouse clicks
+		//------------------------------------------------------
 		public void mousePressed(MouseEvent arg0) {}  // MouseListener
+		
+		//------------------------------------------------------
+		//	Detects when a mouse un-clicks
+		//------------------------------------------------------
 		public void mouseReleased(MouseEvent arg0) {} // MouseListener
 		
 		//------------------------------------------------------
 		//	Detects mouse movements
 		//------------------------------------------------------
-		public void mouseMoved(MouseEvent e) // Detect mouse movements
+		public void mouseMoved(MouseEvent e) // MouseMotionListener
 		{
 			mouseLocation = e.getPoint();
 			repaint();
 		}
+		
+		//------------------------------------------------------
+		//	Detects when a mouse clicks then move
+		//------------------------------------------------------
 		public void mouseDragged(MouseEvent arg0) {} // MouseMotionListener
-
+	}
+	
+	/**
+	 * ButtonListener --- Reset scores when button is pressed
+	 * @author            David Ye Luo, Kenta Medina
+	 * @version           1.0
+	 * @since             2016-10-27
+	 */
+	private class ButtonListener implements ActionListener
+	{
 		//------------------------------------------------------
 		//	Listen for button press
 		//------------------------------------------------------
-		public void actionPerformed(ActionEvent arg0) // ActionListener
+		public void actionPerformed(ActionEvent arg0)
 		{
 			// Used for button (reset)
 			shotCounter = 0;
