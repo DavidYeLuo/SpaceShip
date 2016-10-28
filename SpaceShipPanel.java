@@ -14,6 +14,7 @@ public class SpaceShipPanel extends JPanel
 	private Point mouseLocation = null;
 	private boolean isClicked;
 	private int shotCounter;
+	private int lastColor;
 	
 	private JButton resetButton;
 	private SpaceShipListener listener;
@@ -24,6 +25,7 @@ public class SpaceShipPanel extends JPanel
 	public SpaceShipPanel()
 	{
 		shotCounter = 0;
+		lastColor = 0;
 		listener = new SpaceShipListener();
 		resetButton = new JButton("Reset");
 		
@@ -46,9 +48,9 @@ public class SpaceShipPanel extends JPanel
 		
 		if(clickedLocation != null && isClicked)
 		{
-			// Color changes depending what shotCounter is
-			switch((shotCounter)%5)	// Color Generator
-			//switch((shotCounter+(int)(java.lang.Math.random()*4+1))%5)	// Color Generator
+			// Color changes depending on what lastColor is
+			lastColor += +(int)(java.lang.Math.random()*4+1);
+			switch(lastColor%5)	// Color Generator
 			{
 			case 0:
 				g.setColor(Color.green);
