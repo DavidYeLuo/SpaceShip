@@ -36,7 +36,7 @@ public class SpaceShipPanel extends JPanel
 		soundEnabled = false;
 		listener = new SpaceShipListener();
 		resetButton = new JButton("Reset");
-		soundButton = new JButton("Sound is: " + soundEnabled);
+		soundButton = new JButton("Sound is: " + "Off");
 
 		add(resetButton);
 		add(soundButton);
@@ -198,15 +198,19 @@ public class SpaceShipPanel extends JPanel
 			// Whenever the button is pressed,
 			// sound is switched
 			// and changes the button's text
+			
+			String text;
 			if(soundEnabled) 
 			{
 				soundEnabled = false;
+				text = "OFF";
 			}
 			else
 			{
 				soundEnabled = true;
+				text = "ON";
 			}
-			soundButton.setText("Sound is: " + soundEnabled);
+			soundButton.setText("Sound is: " + text);
 		}
 		
 	}
