@@ -1,23 +1,30 @@
 /**
  * SpaceShip --- A game that counts your clicks
- * @author 		 David Ye Luo, Kenta Medina
- * @version		 1.0
- * @since		 2016-10-27
+ * @author 	 David Ye Luo, Kenta Medina
+ * @version	 1.0
+ * @since	 2016-10-28
  */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import sun.audio.*;
+import java.io.*;
 
 public class SpaceShipPanel extends JPanel
 {
 	private Point clickedLocation = null;
 	private Point mouseLocation = null;
-	private boolean isClicked;
+	private boolean clickEnabled;
+	private boolean soundEnabled;
 	private int shotCounter;
 	private int lastColor;
 	
 	private JButton resetButton;
+	private JButton soundButton;
 	private SpaceShipListener listener;
+	
+	private InputStream in; //extra credit
+	private AudioStream as; //extra credit
 	
 	//------------------------------------------------------
 	//	Default Constructor
@@ -26,15 +33,19 @@ public class SpaceShipPanel extends JPanel
 	{
 		shotCounter = 0;
 		lastColor = 0;
+		soundEnabled = false;
 		listener = new SpaceShipListener();
 		resetButton = new JButton("Reset");
-		
+		soundButton = new JButton("Sound is: " + soundEnabled);
+
 		add(resetButton);
+		add(soundButton);
 		
+		resetButton.addActionListener(new ResetButtonListener());
+		soundButton.addActionListener(new SoundButtonListener());
 		addMouseListener(listener);
 		addMouseMotionListener(listener);
-		resetButton.addActionListener(new ButtonListener());
-		
+
 		setBackground(Color.black);
 		setPreferredSize(new Dimension(300, 200));
 	}
@@ -46,7 +57,7 @@ public class SpaceShipPanel extends JPanel
 	{
 		super.paintComponent(g);
 		
-		if(clickedLocation != null && isClicked)
+		if(clickedLocation != null && clickEnabled)
 		{
 			// Color changes depending on what lastColor is
 			lastColor += +(int)(java.lang.Math.random()*4+1);
@@ -72,7 +83,7 @@ public class SpaceShipPanel extends JPanel
 			g.drawLine(clickedLocation.x, clickedLocation.y,
 					     (int)(Math.random() * 300),
 					     (int)(Math.random() * 200));
-			isClicked = false;
+			clickEnabled = false;
 		}
 		if(mouseLocation != null)
 		{
@@ -86,9 +97,9 @@ public class SpaceShipPanel extends JPanel
 	
 	/**
 	 * SpaceShipListener --- Programs to hold Listener
-	 * @author 				 David Ye Luo, Kenta Medina
-	 * @version				 1.0
-	 * @since				 2016-10-27
+	 * @author 		 David Ye Luo, Kenta Medina
+	 * @version		 1.0
+	 * @since		 2016-10-28
 	 */
 	private class SpaceShipListener implements MouseListener,
 						   MouseMotionListener
@@ -98,7 +109,20 @@ public class SpaceShipPanel extends JPanel
 		//------------------------------------------------------
 		public void mouseClicked(MouseEvent e) // MouseListener
 		{
-			isClicked = true;
+			// This is the sound played 
+			// Feel free to make it more efficient
+			// So far this is my only solution
+			// Due to IDE technical difficulties
+			// My Eclipse doesn't work with sound classes
+			if(soundEnabled) 					
+			{							// :On purpose:
+				try{						// New files are created
+					in = new FileInputStream("raygun.au"); 	// to repeat the sound.
+					as = new AudioStream(in);		//
+					AudioPlayer.player.start(as);		// If the variables
+				}catch(Exception ex) {}				// aren't reinstantiated
+			}							// the sound will only play once.
+			clickEnabled = true;
 			clickedLocation = e.getPoint();
 			shotCounter++;
 			repaint();
@@ -140,12 +164,12 @@ public class SpaceShipPanel extends JPanel
 	}
 	
 	/**
-	 * ButtonListener --- Reset scores when button is pressed
-	 * @author            David Ye Luo, Kenta Medina
-	 * @version           1.0
-	 * @since             2016-10-27
+	 * ResetButtonListener --- Reset scores when button is pressed
+	 * @author                 David Ye Luo, Kenta Medina
+	 * @version		   1.0
+	 * @since		   2016-10-28
 	 */
-	private class ButtonListener implements ActionListener
+	private class ResetButtonListener implements ActionListener
 	{
 		//------------------------------------------------------
 		//	Listen for button press
@@ -156,6 +180,35 @@ public class SpaceShipPanel extends JPanel
 			shotCounter = 0;
 			repaint();
 		}
+	}
+	/**
+	 * SoundButtonListener --- Turns on or off sound
+	 * @author		   David Ye Luo, Kenta Medina
+	 * @version		   1.0
+	 * @since		   2016-10-28
+	 */
+	private class SoundButtonListener implements ActionListener
+	{
+
+		//------------------------------------------------------
+		//	Listen for button press
+		//------------------------------------------------------
+		public void actionPerformed(ActionEvent arg0) 
+		{
+			// Whenever the button is pressed,
+			// sound is switched
+			// and changes the button's text
+			if(soundEnabled) 
+			{
+				soundEnabled = false;
+			}
+			else
+			{
+				soundEnabled = true;
+			}
+			soundButton.setText("Sound is: " + soundEnabled);
+		}
+		
 	}
 	
 }
