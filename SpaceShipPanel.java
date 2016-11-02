@@ -1,8 +1,8 @@
 /**
- * SpaceShip --- A game that counts your clicks
- * @author 	 David Ye Luo, Kenta Medina
- * @version	 1.0
- * @since	 2016-10-28
+ * SpaceShipPanel --- A game that counts your clicks
+ * @author            David Ye Luo, Kenta Medina
+ * @version           1.0
+ * @since             2016-11-2
  */
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +59,7 @@ public class SpaceShipPanel extends JPanel
 		
 		if(clickedLocation != null && clickEnabled)
 		{
-			// Color changes depending on what lastColor is
+			// draw a laser beam
 			lastColor += +(int)(java.lang.Math.random()*4+1);
 			switch(lastColor%5)	// Color Generator
 			{
@@ -85,12 +85,27 @@ public class SpaceShipPanel extends JPanel
 					     (int)(Math.random() * 200));
 			clickEnabled = false;
 		}
+
 		if(mouseLocation != null)
 		{
-			g.setColor(Color.cyan); // Spaceship
-			g.fillOval(mouseLocation.x - 25, mouseLocation.y - 12, 50, 25);	// SpaceShip
+			// Draw SpaceShip when mouse is detected
+			
+			// SpaceShip's Head
+			g.setColor(Color.red);
+			g.fillOval(mouseLocation.x-8, mouseLocation.y-7 - 12, 16, 14);
+			
+			// SpaceShip's Body
+			g.setColor(Color.yellow); 
+			g.fillOval(mouseLocation.x-25, mouseLocation.y-12, 50, 25);
+			
+			// SpaceShip's Window
+			g.setColor(Color.blue);
+			g.fillOval(mouseLocation.x-5 - 12, mouseLocation.y-5, 10, 10); // first window
+			g.fillOval(mouseLocation.x-5, mouseLocation.y-5, 10, 10); // second window
+			g.fillOval(mouseLocation.x-5 + 12, mouseLocation.y-5, 10, 10); // third window
 		}
-		g.setColor(Color.white);  // Counter
+		// String displayed
+		g.setColor(Color.white);
 		g.drawString("Shot counter: " + shotCounter, 0, 195);  // Counter
 		g.drawString("by David and Kenta", 194, 195);  // Credit
 	}
@@ -167,7 +182,7 @@ public class SpaceShipPanel extends JPanel
 	 * ResetButtonListener --- Reset scores when button is pressed
 	 * @author                 David Ye Luo, Kenta Medina
 	 * @version		   1.0
-	 * @since		   2016-10-28
+	 * @since		   2016-11-2
 	 */
 	private class ResetButtonListener implements ActionListener
 	{
@@ -185,7 +200,7 @@ public class SpaceShipPanel extends JPanel
 	 * SoundButtonListener --- Turns on or off sound
 	 * @author		   David Ye Luo, Kenta Medina
 	 * @version		   1.0
-	 * @since		   2016-10-28
+	 * @since		   2016-11-2
 	 */
 	private class SoundButtonListener implements ActionListener
 	{
